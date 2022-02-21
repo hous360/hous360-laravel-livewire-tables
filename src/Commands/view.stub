@@ -1,5 +1,29 @@
+{{-- id --}}
+<x-livewire-tables::bs5.table.cell>{{ $row->id }}</x-livewire-tables::bs5.table.cell>
+
+{{-- ações --}}
 <x-livewire-tables::bs5.table.cell>
-{{-- Note: This is a tailwind cell --}}
-{{-- For bootstrap 4, use <x-livewire-tables::bs4.table.cell> --}}
-{{-- For bootstrap 5, use <x-livewire-tables::bs5.table.cell> --}}
+
+    {{-- visualizar --}}
+    @can('default')
+        <button wire:click.prevent="show({{ $row->id }})" class="btn btn-outline-secondary btn-icon btn-sm"
+            type="button">
+            <x-feathericon-eye />
+        </button>
+    @endcan
+
+    {{-- editar --}}
+    @can('default')
+        <button wire:click.prevent="edit({{ $row->id }})" class="btn btn-outline-primary btn-icon btn-sm" type="button">
+            <x-feathericon-edit />
+        </button>
+    @endcan
+
+    <!-- remover -->
+    @can('default')
+        <button wire:click.prevent="modalDeleteShow({{ $row->id }})" class="btn btn-outline-danger btn-icon btn-sm"
+            type="button">
+            <x-feathericon-trash-2 />
+        </button>
+    @endcan
 </x-livewire-tables::bs5.table.cell>
