@@ -8,16 +8,128 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class [class] extends DataTableComponent
 {
+    /**
+     * Atributo para controlar a visibilidade do modal delete
+     *
+     * @var boolean
+     */
+    public $modalDeleteVisible = false;
 
+    /**
+     * Atributo para controlar o id do registro a ser removido
+     *
+     * @var [type]
+     */
+    public $modalDeleteId = null;
+
+    /**
+     * Padrão de classes da tabela
+     *
+     * @return string|null
+     */
+    public function setTableClass(): ?string
+    {
+        return 'table table-striped table-hover table-responsive';
+    }
+
+    /**
+     * Colunas da tabela
+     *
+     * @return array
+     */
     public function columns(): array
     {
         return [
-            Column::make('Column Name'),
+            Column::make(__('locale.id'), "id")
+                ->sortable()
+                ,
+            Column::make(__('locale.actions'))
+                ->addClass('livewire-table-actions'),
         ];
     }
 
+    /**
+     * Query / Consulta
+     *
+     * @return Builder
+     */
     public function query(): Builder
     {
+        return Model::query();
+    }
 
+    /**
+     * Redirecionando para a tela de visualização
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function show($id)
+    {
+        return redirect()->route('', ['param' => $id]);
+    }
+
+    /**
+     * Redirecionando para a tela de edição
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function edit($id)
+    {
+        return redirect()->route('', ['param' => $id]);
+    }
+
+    /**
+     * Template do modal delete
+     *
+     * @return string
+     */
+    public function modalsView(): string
+    {
+        return 'livewire-tables.modal.delete';
+    }
+
+    /**
+     * Método para exibir o modal delete com id da linha selecionada
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function modalDeleteShow($id)
+    {
+        //id
+        $this->modalDeleteId = $id;
+
+        //show
+        $this->modalDeleteVisible = true;
+    }
+
+    /**
+     * Método para ocultar o modal delete
+     *
+     * @return void
+     */
+    public function modalDeleteClose()
+    {
+        //hide
+        $this->modalDeleteVisible = false;
+    }
+
+    /**
+     * Ação de deletar o registro da model
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function delete($id)
+    {
+        $this->authorize('');
+
+        //recuperando o registro e removendo
+        $delete = Model::find($id)->delete();
+
+        //hide
+        $this->modalDeleteVisible = false;
     }
 }
